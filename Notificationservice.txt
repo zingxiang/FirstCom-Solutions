@@ -1,0 +1,77 @@
+package com.example.acer.myapplication;
+
+import android.app.NotificationManager;
+import android.app.Service;
+import android.content.Intent;
+import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.support.v7.app.NotificationCompat;
+import android.util.Log;
+import android.widget.Toast;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+p    ublic class NotificationService extends Service {
+
+        private static Timer timer = new Timer();
+
+    @Override
+    public void onCreate() {
+
+        super.onCreate();
+
+    }
+
+    public NotificationService() {
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        // TODO: Return the communication channel to the service.
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        timer.scheduleAtFixedRate(new mainTask(), 0, 20000);
+
+       return super.onStartCommand(intent, flags, startId);
+
+
+
+    }
+
+    private final Handler toastHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+
+            NotificationCompat.Builder mBuilder =
+                    (NotificationCompat.Builder) new NotificationCompat.Builder(NotificationService.this)
+                            .setContentTitle("Notification")
+                            .setContentText("Example");
+
+            // Sets an ID for the notification
+            int mNotificationId = 1;
+// Gets an instance of the NotificationManager service
+            NotificationManager mNotifyMgr =
+                    (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+// Builds the notification and issues it.
+            mNotifyMgr.notify(mNotificationId, mBuilder.build());
+
+        }
+    };
+
+    private class mainTask extends TimerTask
+    {
+        public void run()
+        {
+            toastHandler.sendEmptyMessage(0);
+        }
+    }
+}
